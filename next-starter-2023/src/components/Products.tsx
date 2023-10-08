@@ -17,7 +17,7 @@ export default function Products({ children }: { children: ReactNode }) {
   //   questionId: "123",
   // }
   return (
-    <div className="mx-auto mt-4 w-full max-w-4xl">
+    <div className="mx-auto mt-4 w-full max-w-7xl">
       <div className="relative mt-4 overflow-x-auto">
         <div className="flex flex-wrap">
           {/* The {children} prop is used here to render the content passed as children to this component.

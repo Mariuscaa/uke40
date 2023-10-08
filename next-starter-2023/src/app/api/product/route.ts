@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 
 // Define the 'GET' handler for your API route.
 export function GET() {
-  const products = createProducts({ faker, count: 20 })
+  const products = createProducts({ faker, count: 10 })
 
   // Return a JSON response using 'NextResponse.json' with the data and status code.
   return NextResponse.json(

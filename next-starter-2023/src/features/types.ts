@@ -6,7 +6,7 @@ export type Product = {
   price: number
 }
 
-type CartItem = {
+export type CartItem = {
   product: Product;
   count: number;
 };

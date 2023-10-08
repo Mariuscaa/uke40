@@ -12,6 +12,7 @@ import "@/features/types"
 import CartComponent from "@/components/CartComponent"
 import ProductItem from "@/components/ProductItem"
 import { TableHead } from "@/components/table/TableHead"
+import { calcSum } from "@/features/calcSum"
 
 // Importing custom components and types
 
@@ -20,7 +21,7 @@ const initialCart: Cart = {
 }
 
 // Defining the ResponsePage component
-export default function ResponsePage() {
+export default function ProductPage() {
   // State to store the responses data
   const [products, setProducts] = useState<Product[]>([])
   const [cart, setCart] = useState(initialCart)
@@ -84,6 +85,43 @@ export default function ResponsePage() {
     })
   }
 
+  const handleIncrease = (productId: string) => {
+    setCart((prevCart: Cart) => {
+      const updatedProducts = prevCart.products.map((item) =>
+        item.product.id === productId
+          ? { ...item, count: item.count + 1 }
+          : item,
+      )
+      return { ...prevCart, products: updatedProducts }
+    })
+  }
+
+  const handleDecrease = (productId: string) => {
+    setCart((prevCart: Cart) => {
+      const updatedProducts = prevCart.products.map((item) => {
+        if (item.product.id === productId) {
+          if (item.count > 1) {
+            // Decrease the count if it's greater than 1
+            return { ...item, count: item.count - 1 }
+          } else {
+            // Remove the item from the cart if count is 1 or less
+            handleDelete(productId)
+          }
+        }
+        return item
+      })
+
+      // Filter out null values (removed items) from the updatedProducts array
+
+      return { ...prevCart, products: updatedProducts }
+    })
+  }
+
+  const handlePurchase = () => {
+    // eslint-disable-next-line no-console
+    console.log("Purchase sum: " + calcSum(cart.products))
+  }
+
   // What to render if no responses
   if (!products.length) {
     return (
@@ -106,30 +144,40 @@ export default function ResponsePage() {
           />
         ))}
       </Products>
-      <CartComponent>
-        <TableHead headers={["Id", "Title", "Price", "Count", "Actions"]} />
-        <tbody>
-          {!cart.products.length ? (
-            <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
-              <td
-                colSpan={5}
-                className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-              >
-                No products in cart.
-              </td>
-            </tr>
-          ) : (
-            cart.products.map((product) => (
-              <ProductItem
-                key={product.product.id}
-                onDelete={handleDelete}
-                count={product.count}
-                {...product.product}
-              />
-            ))
-          )}
-        </tbody>
-      </CartComponent>
+      <div>
+        <CartComponent>
+          <TableHead headers={["Id", "Title", "Price", "Count", "Actions"]} />
+          <tbody>
+            {!cart.products.length ? (
+              <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
+                <td
+                  colSpan={5}
+                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                >
+                  No products in cart.
+                </td>
+              </tr>
+            ) : (
+              cart.products.map((product) => (
+                <ProductItem
+                  key={product.product.id}
+                  onDelete={handleDelete}
+                  onIncrease={handleIncrease}
+                  onDecrease={handleDecrease}
+                  count={product.count}
+                  {...product.product}
+                />
+              ))
+            )}
+          </tbody>
+        </CartComponent>
+        <button
+          onClick={handlePurchase}
+          className="mx-auto block rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Purchase
+        </button>
+      </div>
     </div>
   )
 }
