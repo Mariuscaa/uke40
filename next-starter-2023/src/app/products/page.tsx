@@ -107,7 +107,7 @@ export default function ResponsePage() {
         ))}
       </Products>
       <CartComponent>
-        <TableHead headers={["Id", "Title", "Price", "Actions"]} />
+        <TableHead headers={["Id", "Title", "Price", "Count", "Actions"]} />
         <tbody>
           {!cart.products.length ? (
             <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -123,6 +123,7 @@ export default function ResponsePage() {
               <ProductItem
                 key={product.product.id}
                 onDelete={handleDelete}
+                count={product.count}
                 {...product.product}
               />
             ))

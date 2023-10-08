@@ -2,12 +2,12 @@ export type CartItemProps = {
     id: string
     title: string
     price: number
-    count?: number
+    count: number
     onDelete?: (id: string) => void
   }
   
   export default function ProductItem(props: CartItemProps) {
-    const { id, title, price, onDelete } = props
+    const { id, title, price, count, onDelete } = props
   
     function handleDelete() {
       onDelete?.(id) // Calls the onDelete function if it exists, passing the id as an argument
@@ -23,6 +23,9 @@ export type CartItemProps = {
         </td>
         <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
           {price}
+        </td>
+        <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
+          {count}
         </td>
         {/* Display a delete button if onDelete prop is provided */}
         {onDelete ? (
