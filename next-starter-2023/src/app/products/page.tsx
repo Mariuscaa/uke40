@@ -2,18 +2,28 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import type { Cart, Product } from "@/features/types"
+
+import ProductCard from "@/components/ProductCard"
+import Products from "@/components/Products"
+
+import "@/features/types"
+
+import CartComponent from "@/components/CartComponent"
+import ProductItem from "@/components/ProductItem"
+import { TableHead } from "@/components/table/TableHead"
 
 // Importing custom components and types
-import { type Product } from "@/features/types"
-import Products from "@/components/Products"
-import { TableHead } from "@/components/table/TableHead"
-import ProductItem from "@/components/ProductItem"
 
+const initialCart: Cart = {
+  products: [],
+}
 
 // Defining the ResponsePage component
 export default function ResponsePage() {
   // State to store the responses data
   const [products, setProducts] = useState<Product[]>([])
+  const [cart, setCart] = useState(initialCart)
 
   // Fetch responses data from an API endpoint when the component mounts
   useEffect(() => {
@@ -37,8 +47,41 @@ export default function ResponsePage() {
   }, [])
 
   // Function to handle response deletion
+
+  const handleAddToCart = (product: Product) => {
+    setCart((prevCart: Cart) => {
+      const existingProduct = prevCart.products.find(
+        (item) => item.product.id === product.id,
+      )
+
+      if (!existingProduct) {
+        // If product does not exist in existing cart, create a new cart object
+        const updatedProducts = [
+          ...prevCart.products,
+          { product: product, count: 1 },
+        ]
+        return { ...prevCart, products: updatedProducts }
+      } else {
+        // If product already exists, increment its count
+        const updatedProducts = prevCart.products.map((item) =>
+          item.product.id === product.id
+            ? { ...item, count: item.count + 1 }
+            : item,
+        )
+        return { ...prevCart, products: updatedProducts }
+      }
+    })
+  }
+
   const handleDelete = (id: string) => {
-    setProducts((prev) => prev.filter((response) => response.id !== id))
+    setCart((prev) => {
+      // Filter out the product with the matching id
+      const updatedProducts = prev.products.filter(
+        (product) => product.product.id !== id,
+      )
+      // Return a new cart object with the updated products array
+      return { ...prev, products: updatedProducts } as Cart
+    })
   }
 
   // What to render if no responses
@@ -53,30 +96,39 @@ export default function ResponsePage() {
   return (
     <div className="mx-auto mt-8 w-full max-w-screen-2xl">
       {/* Using "children" in Responses to be able to have the flexibility to add whatever we like */}
+
       <Products>
-        <TableHead headers={[...Object.keys(products[0]), "Actions"]} />
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            onAddToCart={handleAddToCart}
+            {...product}
+          />
+        ))}
+      </Products>
+      <CartComponent>
+        <TableHead headers={["Id", "Title", "Price", "Actions"]} />
         <tbody>
-          {!products.length ? (
+          {!cart.products.length ? (
             <tr className="border-b bg-white dark:border-gray-700 dark:bg-gray-800">
               <td
                 colSpan={5}
                 className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
               >
-                Ingen data. Vennligst justere filteret
+                No products in cart.
               </td>
             </tr>
-          ) : null}
-          {/* Using ResponseItem component and provides necessary props to this component */}
-          {products.map((product) => (
-            <ProductItem
-              key={product.id}
-              onDelete={handleDelete}
-              onIncrease={() => {null}}
-              {...product}
-            />
-          ))}
+          ) : (
+            cart.products.map((product) => (
+              <ProductItem
+                key={product.product.id}
+                onDelete={handleDelete}
+                {...product.product}
+              />
+            ))
+          )}
         </tbody>
-      </Products>
+      </CartComponent>
     </div>
   )
 }

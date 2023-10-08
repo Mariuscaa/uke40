@@ -6,6 +6,15 @@ export type Product = {
   price: number
 }
 
+type CartItem = {
+  product: Product;
+  count: number;
+};
+
+export type Cart = {
+  products: CartItem[];
+}
+
 export type Faker = {
   id: () => string
   title: () => string
