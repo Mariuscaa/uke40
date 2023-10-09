@@ -1,12 +1,18 @@
+import { type Cart } from "@/features/types";
 import { type ReactNode } from "react" // Import ReactNode type for type checking
 
 // Importing these dependencies is commented out as they are not used when children are provided.
 // import { createResponses, faker } from "../features/responses/createResponse"
 // import ResponseItem from "./ResponseItem"
 
+type CartComponentProps = {
+  children: ReactNode;
+  _cart: Cart; // Define the cart prop
+}
+
 // This component accepts a single prop, `children`, which is of type ReactNode.
 // ReactNode is a type that represents any valid React node, which includes JSX, strings, numbers, and more.
-export default function CartComponent({ children }: { children: ReactNode }) {
+export default function CartComponent({ children, _cart}: CartComponentProps) {
   // Way to get responses if we do not use children
   // const responses = Array.from(createResponses({ count: 10, faker }).values())
   // const alternative = {

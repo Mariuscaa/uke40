@@ -35,9 +35,18 @@ export default function ProductItem(props: CartItemProps) {
         {price}
       </td>
       <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-        {count}
+        {onDecrease && (
+          <button onClick={handleDecrease} className="px-2 py-1 text-red-300">
+            -
+          </button>
+        )}
+        <span className="px-2 py-1">{count}</span>
+        {onIncrease && (
+          <button onClick={handleIncrease} className="px-2 py-1 text-red-300">
+            +
+          </button>
+        )}
       </td>
-      {/* Display a delete button if onDelete prop is provided */}
       {onDelete ? (
         <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
           <button
@@ -52,36 +61,7 @@ export default function ProductItem(props: CartItemProps) {
           </button>
         </td>
       ) : null}
-
-      {onIncrease ? (
-        <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-          <button
-            // Alternative way to call onDelete inline
-            // onClick={() => {
-            //   onDelete(id)
-            // }}
-            onClick={handleIncrease} 
-            className="text-red-300"
-          >
-            +
-          </button>
-        </td>
-      ) : null}
-
-      {onDecrease ? (
-        <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-          <button
-            // Alternative way to call onDelete inline
-            // onClick={() => {
-            //   onDelete(id)
-            // }}
-            onClick={handleDecrease} 
-            className="text-red-300"
-          >
-            -
-          </button>
-        </td>
-      ) : null}
+      {/* Display a delete button if onDelete prop is provided */}
     </tr>
   )
 }
