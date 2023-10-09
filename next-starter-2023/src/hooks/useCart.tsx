@@ -1,12 +1,13 @@
-import { useState } from "react";
-import type { Cart, Product } from "@/features/types";
-import { calcSum } from "@/features/calcSum";
+import { useState } from "react"
+import type { Cart, Product } from "@/features/types"
+
+import { calcSum } from "@/features/calcSum"
 
 export function useCart() {
   const initialCart: Cart = {
     products: [],
-  };
-  const [cart, setCart] = useState<Cart>(initialCart);
+  }
+  const [cart, setCart] = useState<Cart>(initialCart)
 
   const handleAddToCart = (product: Product) => {
     setCart((prevCart: Cart) => {
@@ -35,11 +36,9 @@ export function useCart() {
 
   const handleDelete = (id: string) => {
     setCart((prev) => {
-      // Filter out the product with the matching id
       const updatedProducts = prev.products.filter(
         (product) => product.product.id !== id,
       )
-      // Return a new cart object with the updated products array
       return { ...prev, products: updatedProducts } as Cart
     })
   }
@@ -60,27 +59,22 @@ export function useCart() {
       const updatedProducts = prevCart.products.map((item) => {
         if (item.product.id === productId) {
           if (item.count > 1) {
-            // Decrease the count if it's greater than 1
             return { ...item, count: item.count - 1 }
           } else {
-            // Remove the item from the cart if count is 1 or less
             handleDelete(productId)
           }
         }
         return item
       })
-
-      // Filter out null values (removed items) from the updatedProducts array
-
       return { ...prevCart, products: updatedProducts }
     })
   }
 
   const handlePurchase = () => {
     // eslint-disable-next-line no-console
-    console.log("Purchase sum: " + calcSum(cart.products));
-    return ("Purchase sum: " + calcSum(cart.products))
-  };
+    console.log("Purchase sum: " + calcSum(cart.products))
+    return "Purchase sum: " + calcSum(cart.products)
+  }
 
   return {
     cart,
@@ -89,5 +83,5 @@ export function useCart() {
     handleIncrease,
     handleDecrease,
     handlePurchase,
-  };
+  }
 }

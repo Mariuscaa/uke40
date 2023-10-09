@@ -12,15 +12,15 @@ export default function ProductItem(props: CartItemProps) {
   const { id, title, price, count, onDelete, onIncrease, onDecrease } = props
 
   function handleDelete() {
-    onDelete?.(id) // Calls the onDelete function if it exists, passing the id as an argument
+    onDelete?.(id) 
   }
 
   function handleIncrease() {
-    onIncrease?.(id) // Calls the onDelete function if it exists, passing the id as an argument
+    onIncrease?.(id) 
   }
 
   function handleDecrease() {
-    onDecrease?.(id) // Calls the onDelete function if it exists, passing the id as an argument
+    onDecrease?.(id) 
   }
 
   return (
@@ -50,18 +50,14 @@ export default function ProductItem(props: CartItemProps) {
       {onDelete ? (
         <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
           <button
-            // Alternative way to call onDelete inline
-            // onClick={() => {
-            //   onDelete(id)
-            // }}
-            onClick={handleDelete} // Call the handleDelete function when the button is clicked
+
+            onClick={handleDelete} 
             className="text-red-300"
           >
             Delete
           </button>
         </td>
       ) : null}
-      {/* Display a delete button if onDelete prop is provided */}
     </tr>
   )
 }
